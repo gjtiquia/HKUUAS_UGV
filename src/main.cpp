@@ -8,18 +8,13 @@ UGVParameters parameters;
 UGV ugv(parameters);
 
 void setup() {
-  parameters.motorFrontLeftPin = 1;
-  parameters.motorBackLeftPin = 2;
-  parameters.motorFrontRightPin = 3;
-  parameters.motorBackRightPin = 4;
-  parameters.gpsPin = 5;
+  parameters.setMotorFrontLeftPin(1);
+  parameters.setMotorBackLeftPin(2);
+  parameters.setMotorFrontRightPin(3);
+  parameters.setMotorBackRightPin(4);
+  parameters.setGPSPin(5);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
 
-int main() {
-  setup();
-  
 }

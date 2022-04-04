@@ -5,7 +5,7 @@
 
 class UGV {
     public:
-        // Contructor
+        // Contructor, pass parameters by reference
         UGV(UGVParameters &parameters);
 
     private:

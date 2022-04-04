@@ -6,16 +6,27 @@ class UGVParameters {
     public:
         // Contructor
         UGVParameters();
-        
-        // Public variables
-        int motorFrontLeftPin;
-        int motorBackLeftPin;
-        int motorFrontRightPin;
-        int motorBackRightPin;
 
-        int gpsPin;
+        // Setters
+        void setMotorFrontLeftPin(int pin);
+        void setMotorBackLeftPin(int pin);
+        void setMotorFrontRightPin(int pin);
+        void setMotorBackRightPin(int pin);
+        void setGPSPin(int pin);
+        
+        // Getters
+        int getMotorFrontLeftPin();
+        int getMotorBackLeftPin();
+        int getMotorFrontRightPin();
+        int getMotorBackRightPin();
+        int getGPSPin();
 
     private:
+        int _motorFrontLeftPin;
+        int _motorBackLeftPin;
+        int _motorFrontRightPin;
+        int _motorBackRightPin;
+        int _gpsPin;
 };
 
 #endif
