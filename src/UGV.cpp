@@ -20,6 +20,11 @@ void UGV::moveForward() {
     _rightMotor.moveForward();
 }
 
+void UGV::moveBackward() {
+    _leftMotor.moveBackward();
+    _rightMotor.moveBackward();
+}
+
 void UGV::rotateCW() {
     _leftMotor.moveForward();
     _rightMotor.moveBackward();

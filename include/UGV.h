@@ -13,6 +13,7 @@ class UGV {
         // Movement Functions
         void stop();
         void moveForward();
+        void moveBackward();
         void rotateCW();
         void rotateCCW();
 
