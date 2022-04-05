@@ -20,7 +20,7 @@ void Motor::moveForward() {
     digitalWrite(_pin2, LOW);
 }
 
-void Motor::moveForward() {
+void Motor::moveBackward() {
     digitalWrite(_pin1, LOW);
     digitalWrite(_pin2, HIGH);
 }

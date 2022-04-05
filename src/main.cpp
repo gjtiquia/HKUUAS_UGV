@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <UGVParameters.h>
 #include <UGV.h>
 
 UGVParameters parameters;
@@ -16,10 +15,10 @@ void setup() {
   // Set Target Coordinates
   parameters.setTargetCoordinate(Coordinate(22, 114)); // Update from Interoperability Server
 
-  // Set UGV parameters
+  // Set UGV Parameters
   ugv = UGV(parameters);
 
-  // Stop UGV
+  // UGV Initial State
   ugv.stop();
 }
 
