@@ -5,15 +5,18 @@ UGVParameters parameters;
 UGV ugv;
 
 void setup() {
+  // Serial Monitor
+  Serial.begin(9600);
+
   // Pins
-  parameters.setMotorLeftPin1(1);
-  parameters.setMotorLeftPin2(2);
-  parameters.setMotorRightPin1(3);
-  parameters.setMotorRightPin2(4);
+  parameters.setMotorLeftPin1(4);
+  parameters.setMotorLeftPin2(5);
+  parameters.setMotorRightPin1(6);
+  parameters.setMotorRightPin2(7);
 
   // Tx and Rx Pin for GPS Module
-  parameters.setTxPin(5);
-  parameters.setRxPin(6);
+  parameters.setTxPin(1);
+  parameters.setRxPin(0);
 
   // Set Target Coordinates
   parameters.setTargetCoordinate(Coordinate(22, 114)); // Update from Interoperability Server
@@ -26,14 +29,39 @@ void setup() {
 }
 
 void loop() {
-  if (!ugv.isOnGround()) 
-    return;
+  // if (!ugv.isOnGround()) 
+  //   return;
 
-  if (!ugv.isOnRightDirection()) {
-      ugv.rotateToTargetDirection();
-  }
+  // if (!ugv.isOnRightDirection()) {
+  //     ugv.rotateToTargetDirection();
+  // }
 
-  if (!ugv.isOnCorrectLocation()) {
-    ugv.moveToTargetLocation();
-  }
+  // if (!ugv.isOnCorrectLocation()) {
+  //   ugv.moveToTargetLocation();
+  // }
+  delay(2000);
+  
+  ugv.moveForward();
+  Serial.println("Move Forward");
+  delay(2000);
+  Serial.println("Stop");
+  ugv.stop();
+  delay(2000);
+
+  Serial.println("Move Backward");
+  ugv.moveBackward();
+  delay(2000);
+  Serial.println("Stop");
+  ugv.stop();
+  delay(2000);
+
+  ugv.rotateCW();
+  delay(2000);
+  ugv.stop();
+  delay(2000);
+
+  ugv.rotateCCW();
+  delay(2000);
+  ugv.stop();
+  delay(2000);
 }
