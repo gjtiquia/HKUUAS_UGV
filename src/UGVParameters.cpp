@@ -3,26 +3,23 @@
 
 UGVParameters::UGVParameters() {}
 
+
 // Setters
 
-void UGVParameters::setMotorFrontLeftPin(int pin) {
-    pinMode(pin, OUTPUT);
-    _motorFrontLeftPin = pin;
+void UGVParameters::setMotorLeftPin1(int pin) {
+    _motorLeftPin1 = pin;
 }
 
-void UGVParameters::setMotorBackLeftPin(int pin) {
-    pinMode(pin, OUTPUT);
-    _motorBackLeftPin = pin;
+void UGVParameters::setMotorLeftPin2(int pin) {
+    _motorLeftPin2 = pin;
 }
 
-void UGVParameters::setMotorFrontRightPin(int pin) {
-    pinMode(pin, OUTPUT);
-    _motorFrontRightPin = pin;
+void UGVParameters::setMotorRightPin1(int pin) {
+    _motorRightPin1 = pin;
 }
 
-void UGVParameters::setMotorBackRightPin(int pin) {
-    pinMode(pin, OUTPUT);
-    _motorBackRightPin = pin;
+void UGVParameters::setMotorRightPin2(int pin) {
+    _motorRightPin2 = pin;
 }
 
 void UGVParameters::setGPSPin(int pin) {
@@ -41,20 +38,20 @@ void UGVParameters::setOnLocationThreshold(float threshold) {
 
 // Getters
 
-int UGVParameters::getMotorFrontLeftPin() {
-    return _motorFrontLeftPin;
+int UGVParameters::getMotorLeftPin1() {
+    return _motorLeftPin1;
 }
 
-int UGVParameters::getMotorBackLeftPin() {
-    return _motorBackLeftPin;
+int UGVParameters::getMotorLeftPin2() {
+    return _motorLeftPin2;
 }
 
-int UGVParameters::getMotorFrontRightPin() {
-    return _motorFrontRightPin;
+int UGVParameters::getMotorRightPin1() {
+    return _motorRightPin1;
 }
 
-int UGVParameters::getMotorBackRightPin() {
-    return _motorBackRightPin;
+int UGVParameters::getMotorRightPin2() {
+    return _motorRightPin2;
 }
 
 int UGVParameters::getGPSPin() {

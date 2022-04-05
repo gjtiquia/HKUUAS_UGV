@@ -1,35 +1,40 @@
-#include <Arduino.h>
-#include <UGVParameters.h>
 #include <UGV.h>
-#include <Coordinate.h>
+
+UGV::UGV() {}
 
 UGV::UGV(UGVParameters &parameters) {
     _parameters = parameters;
+    _leftMotor = Motor(_parameters.getMotorLeftPin1(), _parameters.getMotorLeftPin2());
+    _rightMotor = Motor(_parameters.getMotorRightPin1(), _parameters.getMotorRightPin2());
 }
 
 void UGV::stop() {
-    // All motors stop
+    _leftMotor.stop();
+    _rightMotor.stop();
 }
 
 void UGV::moveForward() {
-    // All motors rotate forward
+    _leftMotor.moveForward();
+    _rightMotor.moveForward();
 }
 
 void UGV::rotateCW() {
-    // Left motors rotate forward
-    // Right motors rotate backwards
+    _leftMotor.moveForward();
+    _rightMotor.moveBackward();
 }
 
 void UGV::rotateCCW() {
-    // Left motors rotate backwards
-    // Right motors rotate forwards
+    _leftMotor.moveBackward();
+    _rightMotor.moveForward();
 }
 
 bool UGV::isOnGround() {
+    // TODO
     return true;
 }
 
 bool UGV::isOnRightDirection() {
+    // TODO
     return true;
 }
 
@@ -39,6 +44,10 @@ bool UGV::isOnCorrectLocation() {
 
     if (distance <= _parameters.getOnLocationThreshold()) return true;
     return false;
+}
+
+void UGV::rotateToTargetDirection() {
+    // TODO
 }
 
 void UGV::moveToLocation(Coordinate coordinate) {
