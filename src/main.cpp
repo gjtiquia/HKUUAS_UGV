@@ -10,7 +10,10 @@ void setup() {
   parameters.setMotorLeftPin2(2);
   parameters.setMotorRightPin1(3);
   parameters.setMotorRightPin2(4);
-  parameters.setGPSPin(5);
+
+  // Tx and Rx Pin for GPS Module
+  parameters.setTxPin(5);
+  parameters.setRxPin(6);
 
   // Set Target Coordinates
   parameters.setTargetCoordinate(Coordinate(22, 114)); // Update from Interoperability Server

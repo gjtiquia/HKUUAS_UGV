@@ -6,6 +6,8 @@ UGV::UGV(UGVParameters &parameters) {
     _parameters = parameters;
     _leftMotor = Motor(_parameters.getMotorLeftPin1(), _parameters.getMotorLeftPin2());
     _rightMotor = Motor(_parameters.getMotorRightPin1(), _parameters.getMotorRightPin2());
+
+    // TODO: setup GPS modules with Tx and Rx pins
 }
 
 void UGV::stop() {
