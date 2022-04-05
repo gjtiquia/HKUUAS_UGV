@@ -14,7 +14,10 @@ class UGVParameters {
         void setMotorRightPin1(int pin);
         void setMotorRightPin2(int pin);
 
-        void setGPSPin(int pin);
+        void setTxPin(int pin);
+        void setRxPin(int pin);
+
+
         void setTargetCoordinate(Coordinate coordinate);
         void setOnLocationThreshold(float threshold);
         
@@ -25,7 +28,8 @@ class UGVParameters {
         int getMotorRightPin1();
         int getMotorRightPin2();
 
-        int getGPSPin();
+        int getTxPin();
+        int getRxPin();
 
         Coordinate getTargetCoordinate();
         float getOnLocationThreshold();
@@ -35,7 +39,8 @@ class UGVParameters {
         int _motorLeftPin2 = 2;
         int _motorRightPin1 = 3;
         int _motorRightPin2 = 4;
-        int _gpsPin = 5;
+        int _txPin = 5;
+        int _rxPin = 6;
         Coordinate _targetCoordinate = Coordinate(0, 0);
         float _onLocationThreshold = 3; // Competition requires UGV to be within 10ft (~3m)
 };

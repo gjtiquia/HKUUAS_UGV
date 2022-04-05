@@ -22,9 +22,12 @@ void UGVParameters::setMotorRightPin2(int pin) {
     _motorRightPin2 = pin;
 }
 
-void UGVParameters::setGPSPin(int pin) {
-    pinMode(pin, INPUT);
-    _gpsPin = pin;
+void UGVParameters::setTxPin(int pin) {
+    _txPin = pin;
+}
+
+void UGVParameters::setRxPin(int pin) {
+    _rxPin = pin;
 }
 
 void UGVParameters::setTargetCoordinate(Coordinate coordinate) {
@@ -54,8 +57,12 @@ int UGVParameters::getMotorRightPin2() {
     return _motorRightPin2;
 }
 
-int UGVParameters::getGPSPin() {
-    return _gpsPin;
+int UGVParameters::getTxPin() {
+    return _txPin;
+}
+
+int UGVParameters::getRxPin() {
+    return _rxPin;
 }
 
 Coordinate UGVParameters::getTargetCoordinate() {
