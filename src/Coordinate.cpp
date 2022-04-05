@@ -1,5 +1,6 @@
 #include <Coordinate.h>
 #include <math.h>
+#include <Arduino.h>
 
 Coordinate::Coordinate(float lat, float lon) {
     _lat = lat;

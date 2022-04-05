@@ -1,6 +1,5 @@
 #ifndef Coordinate_h
 #define Coordinate_h
-#include <Arduino.h>
 
 class Coordinate {
     public:

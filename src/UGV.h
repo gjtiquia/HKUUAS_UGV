@@ -6,6 +6,8 @@
 
 class UGV {
     public:
+        UGV();
+
         // Contructor, pass parameters by reference
         UGV(UGVParameters &parameters);
 
@@ -20,6 +22,7 @@ class UGV {
         bool isOnRightDirection();
         bool isOnCorrectLocation();
         Coordinate getCurrentLocation();
+        void rotateToTargetDirection();
         void moveToLocation(Coordinate coordinate);
         void moveToTargetLocation();
 

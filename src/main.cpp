@@ -3,23 +3,34 @@
 #include <UGV.h>
 
 UGVParameters parameters;
-UGV ugv(parameters);
+UGV ugv;
 
 void setup() {
   // Pins
-  parameters.setMotorFrontLeftPin(1);
-  parameters.setMotorBackLeftPin(2);
-  parameters.setMotorFrontRightPin(3);
-  parameters.setMotorBackRightPin(4);
+  parameters.setMotorLeftPin1(1);
+  parameters.setMotorLeftPin2(2);
+  parameters.setMotorRightPin1(3);
+  parameters.setMotorRightPin2(4);
   parameters.setGPSPin(5);
 
   // Set Target Coordinates
   parameters.setTargetCoordinate(Coordinate(22, 114)); // Update from Interoperability Server
+
+  // Set UGV parameters
+  ugv = UGV(parameters);
+
+  // Stop UGV
+  ugv.stop();
 }
 
 void loop() {
-  if (!ugv.isOnGround()) return;
-  if (!ugv.isOnRightDirection()) return;
+  if (!ugv.isOnGround()) 
+    return;
+
+  if (!ugv.isOnRightDirection()) {
+      ugv.rotateToTargetDirection();
+  }
+
   if (!ugv.isOnCorrectLocation()) {
     ugv.moveToTargetLocation();
   }

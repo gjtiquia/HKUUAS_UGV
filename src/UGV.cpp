@@ -3,6 +3,8 @@
 #include <UGV.h>
 #include <Coordinate.h>
 
+UGV::UGV() {}
+
 UGV::UGV(UGVParameters &parameters) {
     _parameters = parameters;
 }
@@ -39,6 +41,10 @@ bool UGV::isOnCorrectLocation() {
 
     if (distance <= _parameters.getOnLocationThreshold()) return true;
     return false;
+}
+
+void UGV::rotateToTargetDirection() {
+
 }
 
 void UGV::moveToLocation(Coordinate coordinate) {
