@@ -18,8 +18,8 @@ void setup() {
   parameters.setMotorRightPin2(7);
 
   // Tx and Rx Pin for GPS Module
-  parameters.setTxPin(1);
-  parameters.setRxPin(0);
+  parameters.setTxPin(2);
+  parameters.setRxPin(3);
 
   // GPS baud rate
   parameters.setGPSBaudRate(9600);
@@ -38,6 +38,7 @@ void setup() {
 
 void loop() {
   ugv.updateGPS();
+  // Serial.println(ugv.getCurrentLocation().toString());
 
   // if (!ugv.isOnGround()) 
   //   return;

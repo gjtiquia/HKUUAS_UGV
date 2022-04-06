@@ -10,7 +10,7 @@ UGV::UGV(UGVParameters &parameters) {
     // TODO: setup GPS modules with Tx and Rx pins
     _gpsSerial = SoftwareSerial(_parameters.getRxPin(), _parameters.getTxPin());
     _gpsSerial.begin(_parameters.getGPSBaudRate());
-    Serial.println("GPS Serial begin at baudrate = " + String(_parameters.getGPSBaudRate()) + "...");
+    Serial.println("GPS Serial begin at baudrate = " + String(_parameters.getGPSBaudRate()));
     Serial.println("Rx Pin: " + String(_parameters.getRxPin()) + ", Tx Pin: " + String(_parameters.getTxPin()));
 }
 
@@ -77,7 +77,6 @@ void UGV::moveToTargetLocation() {
 TinyGPSPlus UGV::updateGPS() {
     while (_gpsSerial.available() > 0) {
         Serial.write(_gpsSerial.read());
-        Serial.println("Printed");
     }
     return _gps;
 }
