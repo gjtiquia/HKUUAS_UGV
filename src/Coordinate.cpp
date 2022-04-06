@@ -33,3 +33,10 @@ float Coordinate::distanceTo(Coordinate coordinate) {
 
     return 1000 * d; // distance in m
 }
+
+String Coordinate::toString() {
+    String output = "";
+    output += "Latitude: " + String(_lat);
+    output += ", Longtitude: " + String(_lon);
+    return output;
+}

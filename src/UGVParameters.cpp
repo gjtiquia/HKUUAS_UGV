@@ -38,6 +38,9 @@ void UGVParameters::setOnLocationThreshold(float threshold) {
     _onLocationThreshold = threshold;
 }
 
+void UGVParameters::setGPSBaudRate(int baudRate) {
+    _gpsBaudRate = baudRate;
+}
 
 // Getters
 
@@ -63,6 +66,10 @@ int UGVParameters::getTxPin() {
 
 int UGVParameters::getRxPin() {
     return _rxPin;
+}
+
+int UGVParameters::getGPSBaudRate() {
+    return _gpsBaudRate;
 }
 
 Coordinate UGVParameters::getTargetCoordinate() {

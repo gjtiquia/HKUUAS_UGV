@@ -8,6 +8,10 @@ UGV::UGV(UGVParameters &parameters) {
     _rightMotor = Motor(_parameters.getMotorRightPin1(), _parameters.getMotorRightPin2());
 
     // TODO: setup GPS modules with Tx and Rx pins
+    _gpsSerial = SoftwareSerial(_parameters.getRxPin(), _parameters.getTxPin());
+    _gpsSerial.begin(_parameters.getGPSBaudRate());
+    Serial.println("GPS Serial begin at baudrate = " + String(_parameters.getGPSBaudRate()) + "...");
+    Serial.println("Rx Pin: " + String(_parameters.getRxPin()) + ", Tx Pin: " + String(_parameters.getTxPin()));
 }
 
 void UGV::stop() {
@@ -70,6 +74,16 @@ void UGV::moveToTargetLocation() {
     moveToLocation(_parameters.getTargetCoordinate());
 }
 
+TinyGPSPlus UGV::updateGPS() {
+    while (_gpsSerial.available() > 0) {
+        Serial.write(_gpsSerial.read());
+        Serial.println("Printed");
+    }
+    return _gps;
+}
+
 Coordinate UGV::getCurrentLocation() {
-    return Coordinate(0, 0);
+    float lat = _gps.location.lat();
+    float lon = _gps.location.lng();
+    return Coordinate(lat, lon);
 }

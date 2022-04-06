@@ -5,8 +5,11 @@ UGVParameters parameters;
 UGV ugv;
 
 void setup() {
+  delay(5000);
+
   // Serial Monitor
   Serial.begin(9600);
+  Serial.println("Setting up...");
 
   // Pins
   parameters.setMotorLeftPin1(4);
@@ -18,6 +21,9 @@ void setup() {
   parameters.setTxPin(1);
   parameters.setRxPin(0);
 
+  // GPS baud rate
+  parameters.setGPSBaudRate(9600);
+
   // Set Target Coordinates
   parameters.setTargetCoordinate(Coordinate(22, 114)); // Update from Interoperability Server
 
@@ -26,9 +32,13 @@ void setup() {
 
   // UGV Initial State
   ugv.stop();
+
+  Serial.println("UGV initialized");
 }
 
 void loop() {
+  ugv.updateGPS();
+
   // if (!ugv.isOnGround()) 
   //   return;
 
@@ -39,29 +49,4 @@ void loop() {
   // if (!ugv.isOnCorrectLocation()) {
   //   ugv.moveToTargetLocation();
   // }
-  delay(2000);
-  
-  ugv.moveForward();
-  Serial.println("Move Forward");
-  delay(2000);
-  Serial.println("Stop");
-  ugv.stop();
-  delay(2000);
-
-  Serial.println("Move Backward");
-  ugv.moveBackward();
-  delay(2000);
-  Serial.println("Stop");
-  ugv.stop();
-  delay(2000);
-
-  ugv.rotateCW();
-  delay(2000);
-  ugv.stop();
-  delay(2000);
-
-  ugv.rotateCCW();
-  delay(2000);
-  ugv.stop();
-  delay(2000);
 }
