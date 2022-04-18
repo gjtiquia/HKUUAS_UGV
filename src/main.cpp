@@ -3,6 +3,8 @@
 
 UGVParameters parameters;
 SoftwareSerial ss(0,0);
+TinyGPSPlus gps;
+TinyGPSCustom status(gps, "GPTXT", 4);
 UGV ugv;
 
 void setup() {
@@ -36,5 +38,8 @@ void setup() {
 }
 
 void loop() {
-  ugv.updateGPS(ss);
+  ugv.updateGPS(gps, ss);
+  if (status.isUpdated()) {
+    Serial.println(status.value());
+  }
 }

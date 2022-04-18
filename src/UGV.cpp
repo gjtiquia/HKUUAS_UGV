@@ -75,12 +75,12 @@ void UGV::moveToTargetLocation() {
     moveToLocation(_parameters.getTargetCoordinate());
 }
 
-TinyGPSPlus UGV::updateGPS(SoftwareSerial &ss) {
+void UGV::updateGPS(TinyGPSPlus &gps, SoftwareSerial &ss) {
     // Serial.println(_gpsSerial.isListening());
     while (ss.available() > 0) {
-        Serial.write(ss.read());
+        gps.encode(ss.read());
+        // Serial.write(ss.read()); // cannot use together with gps.encode()
     }
-    return _gps;
 }
 
 Coordinate UGV::getCurrentLocation() {

@@ -23,7 +23,7 @@ class UGV {
         bool isOnGround();
         bool isOnRightDirection();
         bool isOnCorrectLocation();
-        TinyGPSPlus updateGPS(SoftwareSerial &ss);
+        void updateGPS(TinyGPSPlus &gps, SoftwareSerial &ss);
         Coordinate getCurrentLocation();
         void rotateToTargetDirection();
         void moveToLocation(Coordinate coordinate);
