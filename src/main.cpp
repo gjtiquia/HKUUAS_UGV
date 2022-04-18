@@ -2,11 +2,10 @@
 #include <UGV.h>
 
 UGVParameters parameters;
+SoftwareSerial ss(0,0);
 UGV ugv;
 
 void setup() {
-  delay(5000);
-
   // Serial Monitor
   Serial.begin(9600);
   Serial.println("Setting up...");
@@ -28,7 +27,7 @@ void setup() {
   parameters.setTargetCoordinate(Coordinate(22, 114)); // Update from Interoperability Server
 
   // Set UGV Parameters
-  ugv = UGV(parameters);
+  ugv = UGV(parameters, ss);
 
   // UGV Initial State
   ugv.stop();
@@ -37,17 +36,5 @@ void setup() {
 }
 
 void loop() {
-  ugv.updateGPS();
-  // Serial.println(ugv.getCurrentLocation().toString());
-
-  // if (!ugv.isOnGround()) 
-  //   return;
-
-  // if (!ugv.isOnRightDirection()) {
-  //     ugv.rotateToTargetDirection();
-  // }
-
-  // if (!ugv.isOnCorrectLocation()) {
-  //   ugv.moveToTargetLocation();
-  // }
+  ugv.updateGPS(ss);
 }

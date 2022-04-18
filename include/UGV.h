@@ -10,7 +10,7 @@ class UGV {
         UGV();
 
         // Contructor, pass parameters by reference
-        UGV(UGVParameters &parameters);
+        UGV(UGVParameters &parameters, SoftwareSerial &ss);
 
         // Movement Functions
         void stop();
@@ -23,7 +23,7 @@ class UGV {
         bool isOnGround();
         bool isOnRightDirection();
         bool isOnCorrectLocation();
-        TinyGPSPlus updateGPS();
+        TinyGPSPlus updateGPS(SoftwareSerial &ss);
         Coordinate getCurrentLocation();
         void rotateToTargetDirection();
         void moveToLocation(Coordinate coordinate);

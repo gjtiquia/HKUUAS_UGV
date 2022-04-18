@@ -10,8 +10,8 @@ class Motor {
         void moveBackward();
 
     private:
-        float _pin1;
-        float _pin2;
+        int _pin1;
+        int _pin2;
 };
 
 #endif
