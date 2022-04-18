@@ -18,7 +18,7 @@ GPS::GPS(int rxPin, int txPin, int baudRate) {
 
 void GPS::update() {
     while (_gpsSerial.available() > 0) {
-        Serial.write(_gpsSerial.read());
+        // Serial.write(_gpsSerial.read());
         _gps.encode(_gpsSerial.read());
     }
     // Serial.print("Antenna Status: "); Serial.println(_antennaStatus.value());
