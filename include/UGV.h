@@ -2,34 +2,53 @@
 #define UGV_h
 #include <UGVParameters.h>
 #include <Motor.h>
+#include <TinyGPS++.h>
+#include <SoftwareSerial.h>
+#include <HCSR04.h>
+#include <Wire.h>
+#include <QMC5883LCompass.h>
+
 
 class UGV {
     public:
         UGV();
 
         // Contructor, pass parameters by reference
-        UGV(UGVParameters &parameters);
+        UGV(UGVParameters &parameters, SoftwareSerial &ss, HCSR04 &hc, QMC5883LCompass &compass);
 
-        // Movement Functions
+        // Movement
+        // Speed = [0, 255]
         void stop();
-        void moveForward();
-        void moveBackward();
-        void rotateCW();
-        void rotateCCW();
+        void moveForward(int speed);
+        void moveBackward(int speed);
+        void rotateCW(int speed);
+        void rotateCCW(int speed);
 
-        // Autonomous Functions
-        bool isOnGround();
-        bool isOnRightDirection();
-        bool isOnCorrectLocation();
-        Coordinate getCurrentLocation();
-        void rotateToTargetDirection();
-        void moveToLocation(Coordinate coordinate);
-        void moveToTargetLocation();
+
+        // Distance Sensor
+        float getDistanceToGround(HCSR04 &hc);
+        bool isOnGround(HCSR04 &hc);
+
+        // Compass
+        void readCompass(QMC5883LCompass &compass);
+        int getDirection(QMC5883LCompass &compass);
+        float calculateBearing(Coordinate coor1, Coordinate coo2); // returns [0, 360)
+        bool isOnRightDirection(TinyGPSPlus &gps, SoftwareSerial &ss, QMC5883LCompass &compass);
+        void rotateToTargetDirection(HCSR04 &hc, TinyGPSPlus &gps, SoftwareSerial &ss, QMC5883LCompass &compass);
+
+        // GPS
+        void updateGPS(TinyGPSPlus &gps, SoftwareSerial &ss);
+        bool isOnCorrectLocation(TinyGPSPlus &gps, SoftwareSerial &ss);
+        Coordinate getCurrentLocation(TinyGPSPlus &gps, SoftwareSerial &ss);
+        void moveToLocation(HCSR04 &hc, TinyGPSPlus &gps, SoftwareSerial &ss, QMC5883LCompass &compass, Coordinate coordinate);
+        void moveToTargetLocation(HCSR04 &hc, TinyGPSPlus &gps, SoftwareSerial &ss, QMC5883LCompass &compass);
+
+
 
     private:
         UGVParameters _parameters;
-        Motor _leftMotor = Motor(1, 2);
-        Motor _rightMotor = Motor(3, 4);
+        Motor _leftMotor = Motor(1, 2, 255);
+        Motor _rightMotor = Motor(3, 4, 255);
 };
 
 #endif
