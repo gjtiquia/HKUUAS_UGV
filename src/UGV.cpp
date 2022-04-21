@@ -4,16 +4,28 @@
 UGV::UGV() {}
 
 
-UGV::UGV(UGVParameters &parameters, SoftwareSerial &ss) {
+UGV::UGV(UGVParameters &parameters, SoftwareSerial &ss, HCSR04 &hc, QMC5883LCompass &compass) {
     _parameters = parameters;
     _leftMotor = Motor(_parameters.getMotorLeftPin1(), _parameters.getMotorLeftPin2());
     _rightMotor = Motor(_parameters.getMotorRightPin1(), _parameters.getMotorRightPin2());
 
-    // TODO: setup GPS modules with Tx and Rx pins
+    // GPS Module Setup
     ss = SoftwareSerial(_parameters.getRxPin(), _parameters.getTxPin());
-    Serial.println("SoftwareSerial(" + String(_parameters.getRxPin()) + ", " + String(_parameters.getTxPin()) + ")");
+    Serial.println("SoftwareSerial(Rx = " + String(_parameters.getRxPin()) + ", Tx = " + String(_parameters.getTxPin()) + ")");
     ss.begin(_parameters.getGPSBaudRate());
     Serial.println("GPS Serial begin at baudrate = " + String(_parameters.getGPSBaudRate()));
+
+    // Ultrasonic Sensor Setup
+    hc = HCSR04(_parameters.getTrigPin(), _parameters.getEchoPin());
+    Serial.println("HC-SR04 Ultrasonic Sensor(Trig = " 
+                    + String(_parameters.getTrigPin())
+                    + ", Echo = "
+                    + String(_parameters.getEchoPin())
+                    );
+
+    // Compass Setup
+    Wire.begin();
+    compass.init();
 }
 
 void UGV::stop() {
