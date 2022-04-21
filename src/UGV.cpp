@@ -26,6 +26,7 @@ UGV::UGV(UGVParameters &parameters, SoftwareSerial &ss, HCSR04 &hc, QMC5883LComp
     // Compass Setup
     Wire.begin();
     compass.init();
+    compass.setCalibration(-1225, 1605, 0, 3366, -1205, 1372); // Calibration outside InnoWing
 }
 
 void UGV::stop() {
@@ -109,4 +110,46 @@ float UGV::getDistanceToGround(HCSR04 &hc) {
     float distance = hc.dist();
     delay(60); // prevent trigger signal to the echo signal
     return distance;
+}
+
+void UGV::readCompass(QMC5883LCompass &compass) {
+    int x, y, z, a, b;
+	char myArray[3];
+	
+	compass.read();
+  
+	x = compass.getX();
+	y = compass.getY();
+	z = compass.getZ();
+	
+	a = compass.getAzimuth();
+	
+	b = compass.getBearing(a);
+
+	compass.getDirection(myArray, a);
+  
+  
+	Serial.print("X: ");
+	Serial.print(x);
+
+	Serial.print(" Y: ");
+	Serial.print(y);
+
+	Serial.print(" Z: ");
+	Serial.print(z);
+
+	Serial.print(" Azimuth: ");
+	Serial.print(a);
+
+	Serial.print(" Bearing: ");
+	Serial.print(b);
+
+	Serial.print(" Direction: ");
+	Serial.print(myArray[0]);
+	Serial.print(myArray[1]);
+	Serial.print(myArray[2]);
+
+	Serial.println();
+
+	delay(250);
 }

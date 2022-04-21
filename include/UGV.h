@@ -27,7 +27,7 @@ class UGV {
         float getDistanceToGround(HCSR04 &hc);
         bool isOnGround(HCSR04 &hc);
 
-        void updateCompass(QMC5883LCompass &compass);
+        void readCompass(QMC5883LCompass &compass);
         bool isOnRightDirection();
 
 

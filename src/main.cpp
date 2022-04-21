@@ -68,82 +68,43 @@ void setup() {
 
 void loop() {
   // Serial.println("On Ground: " + String(ugv.isOnGround(hc)));
+  // ugv.readCompass(compass);
 
-  int x, y, z, a, b;
-	char myArray[3];
-	
-	compass.read();
-  
-	x = compass.getX();
-	y = compass.getY();
-	z = compass.getZ();
-	
-	a = compass.getAzimuth();
-	
-	b = compass.getBearing(a);
+  ugv.updateGPS(gps, ss);
 
-	compass.getDirection(myArray, a);
-  
-  
-	Serial.print("X: ");
-	Serial.print(x);
+  // Check antenna status
+  if (antennaStatus.isUpdated()) {
+    Serial.println(antennaStatus.value());
+  }
 
-	Serial.print(" Y: ");
-	Serial.print(y);
+  // Check if have valid GPS signal (V = Void, A = Active)
+  if (signalStatus1.isUpdated()) {
+    if (String(signalStatus1.value()).equals("V")) {
+      signal1 = false;
+      Serial.println("Signal 1: Void");
+    }
+    else if (String(signalStatus1.value()).equals("A")) {
+      signal1 = true;
+      Serial.println("Signal 1: Active");
+    }
+  }
+  if (signalStatus2.isUpdated()) {
+    if (String(signalStatus2.value()).equals("V")) {
+      signal1 = false;
+      Serial.println("Signal 2: Void");
+    }
+    else if (String(signalStatus2.value()).equals("A")) {
+      signal2 = true;
+      Serial.println("Signal 2: Active");
+    }
+  }
 
-	Serial.print(" Z: ");
-	Serial.print(z);
-
-	Serial.print(" Azimuth: ");
-	Serial.print(a);
-
-	Serial.print(" Bearing: ");
-	Serial.print(b);
-
-	Serial.print(" Direction: ");
-	Serial.print(myArray[0]);
-	Serial.print(myArray[1]);
-	Serial.print(myArray[2]);
-
-	Serial.println();
-
-	delay(250);
-
-  // ugv.updateGPS(gps, ss);
-
-  // // Check antenna status
-  // if (antennaStatus.isUpdated()) {
-  //   Serial.println(antennaStatus.value());
-  // }
-
-  // // Check if have valid GPS signal (V = Void, A = Active)
-  // if (signalStatus1.isUpdated()) {
-  //   if (String(signalStatus1.value()).equals("V")) {
-  //     signal1 = false;
-  //     Serial.println("Signal 1: Void");
-  //   }
-  //   else if (String(signalStatus1.value()).equals("A")) {
-  //     signal1 = true;
-  //     Serial.println("Signal 1: Active");
-  //   }
-  // }
-  // if (signalStatus2.isUpdated()) {
-  //   if (String(signalStatus2.value()).equals("V")) {
-  //     signal1 = false;
-  //     Serial.println("Signal 2: Void");
-  //   }
-  //   else if (String(signalStatus2.value()).equals("A")) {
-  //     signal2 = true;
-  //     Serial.println("Signal 2: Active");
-  //   }
-  // }
-
-  // // Get GPS location if valid
-  // if (signal1 && signal2) {
-  //   if (gps.location.isValid()) {
-  //     Serial.print(gps.location.lat(), 6);
-  //     Serial.print(F(","));
-  //     Serial.print(gps.location.lng(), 6);
-  //   }
-  // }
+  // Get GPS location if valid
+  if (signal1 && signal2) {
+    if (gps.location.isValid()) {
+      Serial.print(gps.location.lat(), 6);
+      Serial.print(F(","));
+      Serial.print(gps.location.lng(), 6);
+    }
+  }
 }
