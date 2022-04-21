@@ -10,7 +10,7 @@ UGVParameters parameters;
 // GPS Module Communication
 SoftwareSerial ss(0,0);
 TinyGPSPlus gps;
-TinyGPSCustom antennaStatus(gps, "GPTXT", 4);
+TinyGPSCustom antennaStatus(gps, "GPTXT", 4;
 
 TinyGPSCustom signalStatus1(gps, "GNRMC", 2);
 TinyGPSCustom latDirection1(gps, "GNRMC", 4);
