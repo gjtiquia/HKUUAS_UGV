@@ -30,12 +30,22 @@ void setup() {
   // Pins
   parameters.setMotorLeftPin1(4);
   parameters.setMotorLeftPin2(5);
+  parameters.setMotorLeftSpeedPin(10); // MUST BE PWM PIN
+
   parameters.setMotorRightPin1(6);
   parameters.setMotorRightPin2(7);
+  parameters.setMotorRightSpeedPin(11); // MUST BE PWM PIN
 
   // Tx and Rx Pin for GPS Module
+  // CANNOT BE ON PIN 0 and PIN 1
   parameters.setTxPin(2);
   parameters.setRxPin(3);
+
+  // GPS baud rate
+  parameters.setGPSBaudRate(9600);
+
+  // Movement speed
+  parameters.setMovementSpeed(150); // [0, 255]
 
   // Trig and Echo Pin for Ultrasonic Distance Sensor (HC-SR04)
   parameters.setTrigPin(9);
@@ -46,9 +56,8 @@ void setup() {
   // MUST connect
   // SCL --> Pin A5
   // SDA --> Pin A4
-
-  // GPS baud rate
-  parameters.setGPSBaudRate(9600);
+  parameters.setRotationThreshold(3);
+  parameters.setRotationSpeed(100); // [0, 255]
 
   // Set Target Coordinates
   parameters.setTargetCoordinate(Coordinate(22, 114)); // Update from Interoperability Server
@@ -62,7 +71,7 @@ void setup() {
 void loop() {
   ugv.updateGPS(gps, ss);
   if (!ugv.isOnGround(hc)) return;
-  if (!ugv.isOnRightDirection(compass))
-    ugv.rotateToTargetDirection(compass);
+  if (!ugv.isOnRightDirection(gps, ss, compass))
+    ugv.rotateToTargetDirection(hc, gps, ss, compass);
   
 }

@@ -1,13 +1,11 @@
 #include <UGV.h>
 
-
 UGV::UGV() {}
-
 
 UGV::UGV(UGVParameters &parameters, SoftwareSerial &ss, HCSR04 &hc, QMC5883LCompass &compass) {
     _parameters = parameters;
-    _leftMotor = Motor(_parameters.getMotorLeftPin1(), _parameters.getMotorLeftPin2());
-    _rightMotor = Motor(_parameters.getMotorRightPin1(), _parameters.getMotorRightPin2());
+    _leftMotor = Motor(_parameters.getMotorLeftPin1(), _parameters.getMotorLeftPin2(), _parameters.getMotorLeftSpeedPin());
+    _rightMotor = Motor(_parameters.getMotorRightPin1(), _parameters.getMotorRightPin2(), _parameters.getMotorRightSpeedPin());
     stop();
     Serial.println("Motors initialized");
 
@@ -38,29 +36,40 @@ UGV::UGV(UGVParameters &parameters, SoftwareSerial &ss, HCSR04 &hc, QMC5883LComp
     Serial.println("Compass initialized and calibrated.");
 }
 
+// Movement Functions
+
 void UGV::stop() {
     _leftMotor.stop();
     _rightMotor.stop();
 }
 
-void UGV::moveForward() {
-    _leftMotor.moveForward();
-    _rightMotor.moveForward();
+void UGV::moveForward(int speed) {
+    _leftMotor.moveForward(speed);
+    _rightMotor.moveForward(speed);
 }
 
-void UGV::moveBackward() {
-    _leftMotor.moveBackward();
-    _rightMotor.moveBackward();
+void UGV::moveBackward(int speed) {
+    _leftMotor.moveBackward(speed);
+    _rightMotor.moveBackward(speed);
 }
 
-void UGV::rotateCW() {
-    _leftMotor.moveForward();
-    _rightMotor.moveBackward();
+void UGV::rotateCW(int speed) {
+    _leftMotor.moveForward(speed);
+    _rightMotor.moveBackward(speed);
 }
 
-void UGV::rotateCCW() {
-    _leftMotor.moveBackward();
-    _rightMotor.moveForward();
+void UGV::rotateCCW(int speed) {
+    _leftMotor.moveBackward(speed);
+    _rightMotor.moveForward(speed);
+}
+
+
+// Distance Sensor
+
+float UGV::getDistanceToGround(HCSR04 &hc) {
+    float distance = hc.dist();
+    delay(60); // prevent trigger signal to the echo signal
+    return distance;
 }
 
 bool UGV::isOnGround(HCSR04 &hc) {
@@ -71,66 +80,8 @@ bool UGV::isOnGround(HCSR04 &hc) {
     return false;
 }
 
-bool UGV::isOnRightDirection(QMC5883LCompass &compass) {
-    // TODO
 
-    // need a threshold
-    return true;
-}
-
-bool UGV::isOnCorrectLocation(TinyGPSPlus &gps, SoftwareSerial &ss) {
-    Coordinate targetLocation = _parameters.getTargetCoordinate();
-    float distance = getCurrentLocation(gps, ss).distanceTo(targetLocation);
-
-    if (distance <= _parameters.getOnLocationThreshold()) return true;
-    return false;
-}
-
-void UGV::rotateToTargetDirection(QMC5883LCompass &compass) {
-    while (isOnGround && !isOnRightDirection) {
-        rotateCW();
-    }
-    stop();
-}
-
-void UGV::moveToLocation(TinyGPSPlus &gps, SoftwareSerial &ss, Coordinate coordinate) {
-    float distance = getCurrentLocation(gps, ss).distanceTo(coordinate);
-    moveForward();
-    while (distance <= _parameters.getOnLocationThreshold()) {
-        distance = getCurrentLocation(gps, ss).distanceTo(coordinate);
-    }
-    stop();
-}
-
-void UGV::moveToTargetLocation(TinyGPSPlus &gps, SoftwareSerial &ss) {
-    moveToLocation(gps, ss, _parameters.getTargetCoordinate());
-}
-
-void UGV::updateGPS(TinyGPSPlus &gps, SoftwareSerial &ss) {
-    while (ss.available() > 0) {
-        gps.encode(ss.read());
-        // Serial.write(ss.read()); // cannot use together with gps.encode()
-    }
-}
-
-Coordinate UGV::getCurrentLocation(TinyGPSPlus &gps, SoftwareSerial &ss) {
-    updateGPS(gps, ss);
-    if (gps.location.isValid()) {
-        return Coordinate(gps.location.lat(), gps.location.lng());
-    }
-    return Coordinate(NULL, NULL);
-}
-
-float UGV::getDistanceToGround(HCSR04 &hc) {
-    float distance = hc.dist();
-    delay(60); // prevent trigger signal to the echo signal
-    return distance;
-}
-
-int UGV::getDirection(QMC5883LCompass &compass) {
-    compass.read();
-    return compass.getAzimuth();
-}
+// Compass
 
 void UGV::readCompass(QMC5883LCompass &compass) {
     int x, y, z, a, b;
@@ -173,3 +124,95 @@ void UGV::readCompass(QMC5883LCompass &compass) {
 
 	delay(250);
 }
+
+int UGV::getDirection(QMC5883LCompass &compass) {
+    compass.read();
+    return compass.getAzimuth();
+}
+
+float UGV::calculateBearing(Coordinate a, Coordinate b) {
+    // Reference: https://towardsdatascience.com/calculating-the-bearing-between-two-geospatial-coordinates-66203f57e4b4 
+    float dL = b.getLon() - a.getLon();
+    float X = cos(b.getLat()) * sin(dL);
+    float Y = cos(a.getLat()) * sin(b.getLat()) - sin(a.getLat()) * cos(b.getLat()) * cos(dL);
+    float bearing = atan2(X,Y);
+    
+    // Restrict value between [0, 360)
+    if (bearing < 0) {
+        bearing = 360 + bearing;
+    }
+
+    return bearing;
+}
+
+bool UGV::isOnRightDirection(TinyGPSPlus &gps, SoftwareSerial &ss, QMC5883LCompass &compass) {
+    // TODO
+    int currentDirection = getDirection(compass);
+
+    Coordinate currentLocation = getCurrentLocation(gps, ss);
+    Coordinate targetLocation = _parameters.getTargetCoordinate();
+    float targetDirection = calculateBearing(currentLocation, targetLocation);
+
+    // Check if within threshold
+    if (abs(currentDirection - targetDirection) < _parameters.getRotationThreshold())
+        return true;
+    return false;
+}
+
+void UGV::rotateToTargetDirection(HCSR04 &hc, TinyGPSPlus &gps, SoftwareSerial &ss, QMC5883LCompass &compass) {
+    Serial.println("Rotating to Target Direction...");
+
+    int rotationSpeed = _parameters.getRotationSpeed();
+    if (isOnGround(hc) && !isOnRightDirection(gps, ss, compass))
+        rotateCW(rotationSpeed);
+
+    while (isOnGround(hc) && !isOnRightDirection(gps, ss, compass)) {}
+    stop();
+
+    Serial.println("Finished rotation");
+}
+
+
+// GPS
+
+void UGV::updateGPS(TinyGPSPlus &gps, SoftwareSerial &ss) {
+    while (ss.available() > 0) {
+        gps.encode(ss.read());
+        // Serial.write(ss.read()); // cannot use together with gps.encode()
+    }
+}
+
+Coordinate UGV::getCurrentLocation(TinyGPSPlus &gps, SoftwareSerial &ss) {
+    updateGPS(gps, ss);
+    if (gps.location.isValid()) {
+        return Coordinate(gps.location.lat(), gps.location.lng());
+    }
+    return Coordinate(NULL, NULL);
+}
+
+bool UGV::isOnCorrectLocation(TinyGPSPlus &gps, SoftwareSerial &ss) {
+    Coordinate targetLocation = _parameters.getTargetCoordinate();
+    float distance = getCurrentLocation(gps, ss).distanceTo(targetLocation);
+
+    if (distance <= _parameters.getOnLocationThreshold()) return true;
+    return false;
+}
+
+void UGV::moveToLocation(TinyGPSPlus &gps, SoftwareSerial &ss, Coordinate coordinate) {
+    float distance = getCurrentLocation(gps, ss).distanceTo(coordinate);
+    int movementSpeed = _parameters.getMovementSpeed();
+    moveForward(movementSpeed);
+    while (distance <= _parameters.getOnLocationThreshold()) {
+        distance = getCurrentLocation(gps, ss).distanceTo(coordinate);
+    }
+    stop();
+}
+
+void UGV::moveToTargetLocation(TinyGPSPlus &gps, SoftwareSerial &ss) {
+    moveToLocation(gps, ss, _parameters.getTargetCoordinate());
+}
+
+
+
+
+

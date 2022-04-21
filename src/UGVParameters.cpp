@@ -14,12 +14,20 @@ void UGVParameters::setMotorLeftPin2(int pin) {
     _motorLeftPin2 = pin;
 }
 
+void UGVParameters::setMotorLeftSpeedPin(int pin) {
+    _motorLeftSpeedPin = pin;
+}
+
 void UGVParameters::setMotorRightPin1(int pin) {
     _motorRightPin1 = pin;
 }
 
 void UGVParameters::setMotorRightPin2(int pin) {
     _motorRightPin2 = pin;
+}
+
+void UGVParameters::setMotorRightSpeedPin(int pin) {
+    _motorRightSpeedPin = pin;
 }
 
 void UGVParameters::setTxPin(int pin) {
@@ -40,6 +48,18 @@ void UGVParameters::setEchoPin(int pin) {
 
 void UGVParameters::setGroundThreshold(float threshold) {
     _groundThreshold = threshold;
+}
+
+void UGVParameters::setRotationThreshold(float deg) {
+    _rotationThreshold = deg;
+}
+
+void UGVParameters::setRotationSpeed(int speed) {
+    _rotationSpeed = speed;
+}
+
+void UGVParameters::setMovementSpeed(int speed) {
+    _movementSpeed = speed;
 }
 
 void UGVParameters::setTargetCoordinate(Coordinate coordinate) {
@@ -64,12 +84,20 @@ int UGVParameters::getMotorLeftPin2() {
     return _motorLeftPin2;
 }
 
+int UGVParameters::getMotorLeftSpeedPin() {
+    return _motorLeftSpeedPin;
+}
+
 int UGVParameters::getMotorRightPin1() {
     return _motorRightPin1;
 }
 
 int UGVParameters::getMotorRightPin2() {
     return _motorRightPin2;
+}
+
+int UGVParameters::getMotorRightSpeedPin() {
+    return _motorRightSpeedPin;
 }
 
 int UGVParameters::getTxPin() {
@@ -90,6 +118,18 @@ int UGVParameters::getEchoPin() {
 
 float UGVParameters::getGroundThreshold() {
     return _groundThreshold;
+}
+
+float UGVParameters::getRotationThreshold() {
+    return _rotationThreshold;
+}
+
+int UGVParameters::getRotationSpeed() {
+    return _rotationSpeed;
+}
+
+int UGVParameters::getMovementSpeed() {
+    return _movementSpeed;
 }
 
 int UGVParameters::getGPSBaudRate() {
