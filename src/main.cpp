@@ -16,7 +16,7 @@ HCSR04 hc(0, 0);
 
 // Compass Sensor
 // Must connect SCL at Pin A5, SDA at Pin A4
-// Remember to first calibrate the compass
+// Remember to first calibrate the compass (refer to QMC5883LCompass GitHub README)
 QMC5883LCompass compass;
 
 bool signal1 = false;
@@ -73,5 +73,6 @@ void loop() {
   if (!ugv.isOnGround(hc)) return;
   if (!ugv.isOnRightDirection(gps, ss, compass))
     ugv.rotateToTargetDirection(hc, gps, ss, compass);
-  
+  if (!ugv.isOnCorrectLocation(gps, ss))
+    ugv.moveToTargetLocation(hc, gps, ss, compass);
 }

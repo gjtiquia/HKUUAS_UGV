@@ -36,6 +36,7 @@ UGV::UGV(UGVParameters &parameters, SoftwareSerial &ss, HCSR04 &hc, QMC5883LComp
     Serial.println("Compass initialized and calibrated.");
 }
 
+
 // Movement Functions
 
 void UGV::stop() {
@@ -161,7 +162,6 @@ bool UGV::isOnRightDirection(TinyGPSPlus &gps, SoftwareSerial &ss, QMC5883LCompa
 
 void UGV::rotateToTargetDirection(HCSR04 &hc, TinyGPSPlus &gps, SoftwareSerial &ss, QMC5883LCompass &compass) {
     Serial.println("Rotating to Target Direction...");
-
     int rotationSpeed = _parameters.getRotationSpeed();
     if (isOnGround(hc) && !isOnRightDirection(gps, ss, compass))
         rotateCW(rotationSpeed);
@@ -198,18 +198,26 @@ bool UGV::isOnCorrectLocation(TinyGPSPlus &gps, SoftwareSerial &ss) {
     return false;
 }
 
-void UGV::moveToLocation(TinyGPSPlus &gps, SoftwareSerial &ss, Coordinate coordinate) {
+void UGV::moveToLocation(HCSR04 &hc, TinyGPSPlus &gps, SoftwareSerial &ss, QMC5883LCompass &compass, Coordinate coordinate) {
+    if (!isOnGround(hc)) return;
+
     float distance = getCurrentLocation(gps, ss).distanceTo(coordinate);
     int movementSpeed = _parameters.getMovementSpeed();
     moveForward(movementSpeed);
-    while (distance <= _parameters.getOnLocationThreshold()) {
+    while (distance > _parameters.getOnLocationThreshold()) {
+        if (!isOnRightDirection(gps, ss, compass)) {
+            stop();
+            rotateToTargetDirection(hc, gps, ss, compass);
+            moveForward(movementSpeed);
+        }
+
         distance = getCurrentLocation(gps, ss).distanceTo(coordinate);
     }
     stop();
 }
 
-void UGV::moveToTargetLocation(TinyGPSPlus &gps, SoftwareSerial &ss) {
-    moveToLocation(gps, ss, _parameters.getTargetCoordinate());
+void UGV::moveToTargetLocation(HCSR04 &hc, TinyGPSPlus &gps, SoftwareSerial &ss, QMC5883LCompass &compass) {
+    moveToLocation(hc, gps, ss, compass, _parameters.getTargetCoordinate());
 }
 
 

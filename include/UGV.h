@@ -40,8 +40,8 @@ class UGV {
         void updateGPS(TinyGPSPlus &gps, SoftwareSerial &ss);
         bool isOnCorrectLocation(TinyGPSPlus &gps, SoftwareSerial &ss);
         Coordinate getCurrentLocation(TinyGPSPlus &gps, SoftwareSerial &ss);
-        void moveToLocation(TinyGPSPlus &gps, SoftwareSerial &ss, Coordinate coordinate);
-        void moveToTargetLocation(TinyGPSPlus &gps, SoftwareSerial &ss);
+        void moveToLocation(HCSR04 &hc, TinyGPSPlus &gps, SoftwareSerial &ss, QMC5883LCompass &compass, Coordinate coordinate);
+        void moveToTargetLocation(HCSR04 &hc, TinyGPSPlus &gps, SoftwareSerial &ss, QMC5883LCompass &compass);
 
 
 
