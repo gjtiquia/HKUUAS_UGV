@@ -30,6 +30,18 @@ void UGVParameters::setRxPin(int pin) {
     _rxPin = pin;
 }
 
+void UGVParameters::setTrigPin(int pin) {
+    _trigPin = pin;
+}
+
+void UGVParameters::setEchoPin(int pin) {
+    _echoPin = pin;
+}
+
+void UGVParameters::setGroundThreshold(float threshold) {
+    _groundThreshold = threshold;
+}
+
 void UGVParameters::setTargetCoordinate(Coordinate coordinate) {
     _targetCoordinate = coordinate;
 }
@@ -66,6 +78,18 @@ int UGVParameters::getTxPin() {
 
 int UGVParameters::getRxPin() {
     return _rxPin;
+}
+
+int UGVParameters::getTrigPin() {
+    return _trigPin;
+}
+
+int UGVParameters::getEchoPin() {
+    return _echoPin;
+}
+
+float UGVParameters::getGroundThreshold() {
+    return _groundThreshold;
 }
 
 int UGVParameters::getGPSBaudRate() {

@@ -4,6 +4,7 @@
 #include <Motor.h>
 #include <TinyGPS++.h>
 #include <SoftwareSerial.h>
+#include <HCSR04.h>
 
 class UGV {
     public:
@@ -20,7 +21,8 @@ class UGV {
         void rotateCCW();
 
         // Autonomous Functions
-        bool isOnGround();
+        float getDistanceToGround(HCSR04 &hc);
+        bool isOnGround(HCSR04 &hc);
         bool isOnRightDirection();
         bool isOnCorrectLocation();
         void updateGPS(TinyGPSPlus &gps, SoftwareSerial &ss);
@@ -33,8 +35,6 @@ class UGV {
         UGVParameters _parameters;
         Motor _leftMotor = Motor(1, 2);
         Motor _rightMotor = Motor(3, 4);
-        TinyGPSPlus _gps;
-        SoftwareSerial _gpsSerial = SoftwareSerial(0, 1);
 };
 
 #endif

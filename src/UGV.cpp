@@ -1,5 +1,6 @@
 #include <UGV.h>
 
+
 UGV::UGV() {}
 
 
@@ -10,9 +11,9 @@ UGV::UGV(UGVParameters &parameters, SoftwareSerial &ss) {
 
     // TODO: setup GPS modules with Tx and Rx pins
     ss = SoftwareSerial(_parameters.getRxPin(), _parameters.getTxPin());
-    // Serial.println("SoftwareSerial(" + String(_parameters.getRxPin()) + ", " + String(_parameters.getTxPin()) + ")");
+    Serial.println("SoftwareSerial(" + String(_parameters.getRxPin()) + ", " + String(_parameters.getTxPin()) + ")");
     ss.begin(_parameters.getGPSBaudRate());
-    // Serial.println("GPS Serial begin at baudrate = " + String(_parameters.getGPSBaudRate()));
+    Serial.println("GPS Serial begin at baudrate = " + String(_parameters.getGPSBaudRate()));
 }
 
 void UGV::stop() {
@@ -40,9 +41,14 @@ void UGV::rotateCCW() {
     _rightMotor.moveForward();
 }
 
-bool UGV::isOnGround() {
-    // TODO
-    return true;
+bool UGV::isOnGround(HCSR04 &hc) {
+    float distance = getDistanceToGround(hc);
+    
+    if (distance < _parameters.getGroundThreshold()) {
+        return true;
+    }
+
+    return false;
 }
 
 bool UGV::isOnRightDirection() {
@@ -84,7 +90,11 @@ void UGV::updateGPS(TinyGPSPlus &gps, SoftwareSerial &ss) {
 }
 
 Coordinate UGV::getCurrentLocation() {
-    float lat = _gps.location.lat();
-    float lon = _gps.location.lng();
-    return Coordinate(lat, lon);
+    // TODO
+}
+
+float UGV::getDistanceToGround(HCSR04 &hc) {
+    float distance = hc.dist();
+    delay(60); // prevent trigger signal to the echo signal
+    return distance;
 }
