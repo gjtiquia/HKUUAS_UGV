@@ -10,9 +10,11 @@ class UGVParameters {
         // Setters
         void setMotorLeftPin1(int pin);
         void setMotorLeftPin2(int pin);
+        void setMotorLeftSpeedPin(int pin);
 
         void setMotorRightPin1(int pin);
         void setMotorRightPin2(int pin);
+        void setMotorRightSpeedPin(int pin);
 
         void setTxPin(int pin);
         void setRxPin(int pin);
@@ -30,9 +32,11 @@ class UGVParameters {
         // Getters
         int getMotorLeftPin1();
         int getMotorLeftPin2();
+        int getMotorLeftSpeedPin();
 
         int getMotorRightPin1();
         int getMotorRightPin2();
+        int getMotorRightSpeedPin();
 
         int getTxPin();
         int getRxPin();
@@ -50,8 +54,12 @@ class UGVParameters {
     private:
         int _motorLeftPin1 = 2;
         int _motorLeftPin2 = 3;
+        int _motorLeftSpeedPin = 10;
+
         int _motorRightPin1 = 4;
         int _motorRightPin2 = 5;
+        int _motorRightSpeedPin = 11;
+
         int _txPin = 6;
         int _rxPin = 7;
         int _trigPin = 8;

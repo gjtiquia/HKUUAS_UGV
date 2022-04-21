@@ -28,16 +28,16 @@ class UGV {
         bool isOnGround(HCSR04 &hc);
 
         void readCompass(QMC5883LCompass &compass);
-        bool isOnRightDirection();
+        int getDirection(QMC5883LCompass &compass);
+        bool isOnRightDirection(QMC5883LCompass &compass);
+        void rotateToTargetDirection(QMC5883LCompass &compass);
 
-
-        bool isOnCorrectLocation();
+        bool isOnCorrectLocation(TinyGPSPlus &gps, SoftwareSerial &ss);
         void updateGPS(TinyGPSPlus &gps, SoftwareSerial &ss);
-        Coordinate getCurrentLocation();
+        Coordinate getCurrentLocation(TinyGPSPlus &gps, SoftwareSerial &ss);
 
-        void rotateToTargetDirection();
-        void moveToLocation(Coordinate coordinate);
-        void moveToTargetLocation();
+        void moveToLocation(TinyGPSPlus &gps, SoftwareSerial &ss, Coordinate coordinate);
+        void moveToTargetLocation(TinyGPSPlus &gps, SoftwareSerial &ss);
 
 
 
