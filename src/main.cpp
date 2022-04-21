@@ -1,149 +1,127 @@
-#include <Arduino.h>
-#include <UGV.h>
+/*
+QMC5883LCompass.h Library Calibration Example Sketch
+Learn more at [https://github.com/mprograms/QMC5883LCompass]
 
-#define LED_PIN 13
+Upload this calibration sketch onto your Arduino to provide calibration for your QMC5883L chip.
+After upload, run the serial monitor and follow the directions.
+When prompted, copy the last line into your project's actual sketch.
 
-// UGV Hardware
-UGV ugv;
-UGVParameters parameters;
+===============================================================================================================
+Release under the GNU General Public License v3
+[https://www.gnu.org/licenses/gpl-3.0.en.html]
+===============================================================================================================
 
-// GPS Module Communication
-SoftwareSerial ss(0,0);
-TinyGPSPlus gps;
-TinyGPSCustom antennaStatus(gps, "GPTXT", 4;
 
-TinyGPSCustom signalStatus1(gps, "GNRMC", 2);
-TinyGPSCustom latDirection1(gps, "GNRMC", 4);
-TinyGPSCustom latCoordinate(gps, "GNRMC", 3);
-TinyGPSCustom lonDirection1(gps, "GNRMC", 6);
-TinyGPSCustom lonCoordinate(gps, "GNRMC", 5);
 
-TinyGPSCustom signalStatus2(gps, "GNGLL", 6);
 
-// Distance Sensor
-HCSR04 hc(0, 0);
 
-// Compass Sensor
-// Must connect SCL at Pin A5, SDA at Pin A4
-// Remember to first calibrate the compass
+
+
+
+
+
+
+                                          UTILITY SKETCH
+                                    NO SERVICABLE PARTS BELOW
+
+
+
+
+
+
+
+
+
+
+
+
+*/
+#include <QMC5883LCompass.h>
+
 QMC5883LCompass compass;
 
-bool signal1 = false;
-bool signal2 = false;
+int calibrationData[3][2];
+bool changed = false;
+bool done = false;
+int t = 0;
+int c = 0;
 
 void setup() {
-  // Serial Monitor
   Serial.begin(9600);
-  Serial.println("Setting up...");
-
-  // Pins
-  parameters.setMotorLeftPin1(4);
-  parameters.setMotorLeftPin2(5);
-  parameters.setMotorRightPin1(6);
-  parameters.setMotorRightPin2(7);
-
-  // Tx and Rx Pin for GPS Module
-  parameters.setTxPin(2);
-  parameters.setRxPin(3);
-
-  // Trig and Echo Pin for Ultrasonic Distance Sensor (HC-SR04)
-  parameters.setTrigPin(9);
-  parameters.setEchoPin(8);
-  parameters.setGroundThreshold(10);
-
-  // GPS baud rate
-  parameters.setGPSBaudRate(9600);
-
-  // Set Target Coordinates
-  parameters.setTargetCoordinate(Coordinate(22, 114)); // Update from Interoperability Server
-
-  // Set UGV Parameters
-  ugv = UGV(parameters, ss, hc, compass);
-
-  // UGV Initial State
-  ugv.stop();
-
-  Serial.println("UGV initialized");
+  compass.init();
+  
+  Serial.println("This will provide calibration settings for your QMC5883L chip. When prompted, move the magnetometer in all directions until the calibration is complete.");
+  Serial.println("Calibration will begin in 5 seconds.");
+  delay(5000);
+  
 }
 
 void loop() {
-  // Serial.println("On Ground: " + String(ugv.isOnGround(hc)));
-
-  int x, y, z, a, b;
-	char myArray[3];
-	
-	compass.read();
+  int x, y, z;
   
-	x = compass.getX();
-	y = compass.getY();
-	z = compass.getZ();
-	
-	a = compass.getAzimuth();
-	
-	b = compass.getBearing(a);
+  // Read compass values
+  compass.read();
 
-	compass.getDirection(myArray, a);
+  // Return XYZ readings
+  x = compass.getX();
+  y = compass.getY();
+  z = compass.getZ();
+
+  changed = false;
+
+  if(x < calibrationData[0][0]) {
+    calibrationData[0][0] = x;
+    changed = true;
+  }
+  if(x > calibrationData[0][1]) {
+    calibrationData[0][1] = x;
+    changed = true;
+  }
+
+  if(y < calibrationData[1][0]) {
+    calibrationData[1][0] = y;
+    changed = true;
+  }
+  if(y > calibrationData[1][1]) {
+    calibrationData[1][1] = y;
+    changed = true;
+  }
+
+  if(z < calibrationData[2][0]) {
+    calibrationData[2][0] = z;
+    changed = true;
+  }
+  if(z > calibrationData[2][1]) {
+    calibrationData[2][1] = z;
+    changed = true;
+  }
+
+  if (changed && !done) {
+    Serial.println("CALIBRATING... Keep moving your sensor around.");
+    c = millis();
+  }
+    t = millis();
   
   
-	Serial.print("X: ");
-	Serial.print(x);
-
-	Serial.print(" Y: ");
-	Serial.print(y);
-
-	Serial.print(" Z: ");
-	Serial.print(z);
-
-	Serial.print(" Azimuth: ");
-	Serial.print(a);
-
-	Serial.print(" Bearing: ");
-	Serial.print(b);
-
-	Serial.print(" Direction: ");
-	Serial.print(myArray[0]);
-	Serial.print(myArray[1]);
-	Serial.print(myArray[2]);
-
-	Serial.println();
-
-	delay(250);
-
-  // ugv.updateGPS(gps, ss);
-
-  // // Check antenna status
-  // if (antennaStatus.isUpdated()) {
-  //   Serial.println(antennaStatus.value());
-  // }
-
-  // // Check if have valid GPS signal (V = Void, A = Active)
-  // if (signalStatus1.isUpdated()) {
-  //   if (String(signalStatus1.value()).equals("V")) {
-  //     signal1 = false;
-  //     Serial.println("Signal 1: Void");
-  //   }
-  //   else if (String(signalStatus1.value()).equals("A")) {
-  //     signal1 = true;
-  //     Serial.println("Signal 1: Active");
-  //   }
-  // }
-  // if (signalStatus2.isUpdated()) {
-  //   if (String(signalStatus2.value()).equals("V")) {
-  //     signal1 = false;
-  //     Serial.println("Signal 2: Void");
-  //   }
-  //   else if (String(signalStatus2.value()).equals("A")) {
-  //     signal2 = true;
-  //     Serial.println("Signal 2: Active");
-  //   }
-  // }
-
-  // // Get GPS location if valid
-  // if (signal1 && signal2) {
-  //   if (gps.location.isValid()) {
-  //     Serial.print(gps.location.lat(), 6);
-  //     Serial.print(F(","));
-  //     Serial.print(gps.location.lng(), 6);
-  //   }
-  // }
+  if ( (t - c > 5000) && !done) {
+    done = true;
+    Serial.println("DONE. Copy the line below and paste it into your projects sketch.);");
+    Serial.println();
+      
+    Serial.print("compass.setCalibration(");
+    Serial.print(calibrationData[0][0]);
+    Serial.print(", ");
+    Serial.print(calibrationData[0][1]);
+    Serial.print(", ");
+    Serial.print(calibrationData[1][0]);
+    Serial.print(", ");
+    Serial.print(calibrationData[1][1]);
+    Serial.print(", ");
+    Serial.print(calibrationData[2][0]);
+    Serial.print(", ");
+    Serial.print(calibrationData[2][1]);
+    Serial.println(");");
+    }
+  
+ 
 }
