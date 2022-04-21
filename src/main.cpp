@@ -8,11 +8,11 @@ UGV ugv;
 UGVParameters parameters;
 
 // GPS Module Communication
-SoftwareSerial ss(0,0);
+SoftwareSerial ss(0,0); // Set pin below
 TinyGPSPlus gps;
 
 // Distance Sensor
-HCSR04 hc(0, 0);
+HCSR04 hc(0, 0); // Set pin below
 
 // Compass Sensor
 // Must connect SCL at Pin A5, SDA at Pin A4
